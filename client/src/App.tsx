@@ -8,16 +8,20 @@ import NotFound from "@/pages/not-found";
 import AuthPage from "@/pages/auth-page";
 import TeacherDashboard from "@/pages/teacher-dashboard";
 import StudentDashboard from "@/pages/student-dashboard";
+import LandingPage from "@/pages/landing-page";
+import { useAuth } from "@/hooks/use-auth"; // Import useAuth
 
 function Router() {
   return (
     <Switch>
+      <Route path="/" component={LandingPage} />
       <Route path="/auth" component={AuthPage} />
       <ProtectedRoute 
-        path="/" 
-        component={({ user }) => 
-          user.isTeacher ? <TeacherDashboard /> : <StudentDashboard />
-        } 
+        path="/dashboard" 
+        component={() => {
+          const { user } = useAuth();
+          return user?.isTeacher ? <TeacherDashboard /> : <StudentDashboard />
+        }} 
       />
       <Route component={NotFound} />
     </Switch>
