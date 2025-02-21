@@ -1,0 +1,108 @@
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { insertAssignmentSchema } from "@shared/schema";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Input } from "@/components/ui/input";
+import { Textarea } from "@/components/ui/textarea";
+import { Button } from "@/components/ui/button";
+import { useMutation } from "@tanstack/react-query";
+import { apiRequest, queryClient } from "@/lib/queryClient";
+import { useToast } from "@/hooks/use-toast";
+import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+
+export function AssignmentForm() {
+  const { toast } = useToast();
+  
+  const form = useForm({
+    resolver: zodResolver(insertAssignmentSchema.omit({ teacherId: true })),
+    defaultValues: {
+      title: "",
+      description: "",
+      dueDate: new Date().toISOString().split('T')[0],
+    },
+  });
+
+  const createAssignment = useMutation({
+    mutationFn: async (data: any) => {
+      const res = await apiRequest("POST", "/api/assignments", data);
+      return res.json();
+    },
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["/api/assignments"] });
+      toast({
+        title: "Success",
+        description: "Assignment created successfully",
+      });
+      form.reset();
+    },
+    onError: (error: Error) => {
+      toast({
+        title: "Error",
+        description: error.message,
+        variant: "destructive",
+      });
+    },
+  });
+
+  return (
+    <div className="space-y-6">
+      <DialogHeader>
+        <DialogTitle>Create New Assignment</DialogTitle>
+      </DialogHeader>
+
+      <Form {...form}>
+        <form onSubmit={form.handleSubmit((data) => createAssignment.mutate(data))} className="space-y-4">
+          <FormField
+            control={form.control}
+            name="title"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Title</FormLabel>
+                <FormControl>
+                  <Input {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="description"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Description</FormLabel>
+                <FormControl>
+                  <Textarea {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <FormField
+            control={form.control}
+            name="dueDate"
+            render={({ field }) => (
+              <FormItem>
+                <FormLabel>Due Date</FormLabel>
+                <FormControl>
+                  <Input type="date" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          <Button 
+            type="submit" 
+            className="w-full"
+            disabled={createAssignment.isPending}
+          >
+            Create Assignment
+          </Button>
+        </form>
+      </Form>
+    </div>
+  );
+}
