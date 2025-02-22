@@ -12,7 +12,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="PlagiCheck" className="h-12" />
+              <img src="/logo.png" alt="PlagiCheck" className="h-8" />
             </Link>
 
             <div className="hidden md:flex space-x-4 ml-8">
