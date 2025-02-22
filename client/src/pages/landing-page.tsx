@@ -3,6 +3,8 @@ import { Navbar } from "@/components/navbar";
 import { Link } from "wouter";
 import { CheckCircle2 } from "lucide-react";
 
+import { ShieldCheck, Brain, Zap } from "lucide-react";
+
 const features = [
   "AI-Powered Plagiarism Detection",
   "Easy Assignment Submission",
@@ -52,6 +54,41 @@ export default function LandingPage() {
                   <p className="text-lg">{feature}</p>
                 </div>
               ))}
+            </div>
+          </div>
+        </section>
+
+        {/* Powerful Features Section */}
+        <section className="py-20 bg-gray-50">
+          <div className="container mx-auto px-4">
+            <h2 className="text-3xl font-bold text-center mb-4">
+              Powerful Features
+            </h2>
+            <p className="text-center text-gray-600 mb-12">
+              Everything you need to maintain academic integrity
+            </p>
+            <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+              <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <ShieldCheck className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">Plagiarism Detection</h3>
+                <p className="text-gray-600">Advanced algorithms to detect content similarity across documents</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Brain className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">AI Content Detection</h3>
+                <p className="text-gray-600">Identify AI-generated content using state-of-the-art analysis</p>
+              </div>
+              <div className="bg-white p-6 rounded-lg shadow-sm text-center">
+                <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <Zap className="h-6 w-6 text-primary" />
+                </div>
+                <h3 className="font-semibold mb-2">Fast Analysis</h3>
+                <p className="text-gray-600">Get instant results with detailed reports and insights</p>
+              </div>
             </div>
           </div>
         </section>
