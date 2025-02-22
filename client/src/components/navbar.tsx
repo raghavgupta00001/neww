@@ -17,19 +17,19 @@ export function Navbar() {
             </Link>
 
             <div className="hidden md:flex space-x-4 ml-8">
-              <Link href="/" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+              <Link href="/" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors font-medium tracking-wide">
                 <Home className="h-4 w-4 mr-2" />
                 Home
               </Link>
-              <Link href="/about" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+              <Link href="/about" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors font-medium tracking-wide">
                 <Info className="h-4 w-4 mr-2" />
                 About
               </Link>
-              <Link href="/ai-detector" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+              <Link href="/ai-detector" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors font-medium tracking-wide">
                 <Bot className="h-4 w-4 mr-2" />
                 AI Detector
               </Link>
-              <Link href="/qr-code" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+              <Link href="/qr-code" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors font-medium tracking-wide">
                 <QrCode className="h-4 w-4 mr-2" />
                 QR Upload
               </Link>
