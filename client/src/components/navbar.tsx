@@ -17,29 +17,21 @@ export function Navbar() {
             </Link>
 
             <div className="hidden md:flex space-x-4 ml-8">
-              <Link href="/">
-                <Button variant="ghost" className="flex items-center">
-                  <Home className="h-4 w-4 mr-2" />
-                  Home
-                </Button>
+              <Link href="/" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+                <Home className="h-4 w-4 mr-2" />
+                Home
               </Link>
-              <Link href="/about">
-                <Button variant="ghost" className="flex items-center">
-                  <Info className="h-4 w-4 mr-2" />
-                  About
-                </Button>
+              <Link href="/about" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+                <Info className="h-4 w-4 mr-2" />
+                About
               </Link>
-              <Link href="/ai-detector">
-                <Button variant="ghost" className="flex items-center">
-                  <Bot className="h-4 w-4 mr-2" />
-                  AI Detector
-                </Button>
+              <Link href="/ai-detector" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+                <Bot className="h-4 w-4 mr-2" />
+                AI Detector
               </Link>
-              <Link href="/qr-code">
-                <Button variant="ghost" className="flex items-center">
-                  <QrCode className="h-4 w-4 mr-2" />
-                  QR Upload
-                </Button>
+              <Link href="/qr-code" className="flex items-center justify-center p-2 rounded-lg bg-gray-100 hover:bg-primary/10 text-gray-600 hover:text-primary transition-colors">
+                <QrCode className="h-4 w-4 mr-2" />
+                QR Upload
               </Link>
             </div>
           </div>
