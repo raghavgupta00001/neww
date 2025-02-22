@@ -1,8 +1,12 @@
 import { User, Assignment, Submission, InsertUser, InsertAssignment, InsertSubmission } from "@shared/schema";
+import { users, assignments, submissions } from "@shared/schema";
 import session from "express-session";
-import createMemoryStore from "memorystore";
+import { db } from "./db";
+import { eq } from "drizzle-orm";
+import connectPg from "connect-pg-simple";
+import { pool } from "./db";
 
-const MemoryStore = createMemoryStore(session);
+const PostgresSessionStore = connectPg(session);
 
 export interface IStorage {
   getUser(id: number): Promise<User | undefined>;
@@ -20,84 +24,56 @@ export interface IStorage {
   sessionStore: session.Store;
 }
 
-export class MemStorage implements IStorage {
-  private users: Map<number, User>;
-  private assignments: Map<number, Assignment>;
-  private submissions: Map<number, Submission>;
-  private currentId: number;
+export class DatabaseStorage implements IStorage {
   sessionStore: session.Store;
 
   constructor() {
-    this.users = new Map();
-    this.assignments = new Map();
-    this.submissions = new Map();
-    this.currentId = 1;
-    this.sessionStore = new MemoryStore({
-      checkPeriod: 86400000,
+    this.sessionStore = new PostgresSessionStore({
+      pool,
+      createTableIfMissing: true,
     });
   }
 
   async getUser(id: number): Promise<User | undefined> {
-    return this.users.get(id);
+    const [user] = await db.select().from(users).where(eq(users.id, id));
+    return user;
   }
 
   async getUserByUsername(username: string): Promise<User | undefined> {
-    return Array.from(this.users.values()).find(
-      (user) => user.username === username,
-    );
+    const [user] = await db.select().from(users).where(eq(users.username, username));
+    return user;
   }
 
   async createUser(insertUser: InsertUser): Promise<User> {
-    const id = this.currentId++;
-    const user: User = { 
-      ...insertUser, 
-      id,
-      isTeacher: insertUser.isTeacher ?? false 
-    };
-    this.users.set(id, user);
+    const [user] = await db.insert(users).values(insertUser).returning();
     return user;
   }
 
   async createAssignment(insertAssignment: InsertAssignment): Promise<Assignment> {
-    const id = this.currentId++;
-    const assignment: Assignment = { ...insertAssignment, id };
-    this.assignments.set(id, assignment);
+    const [assignment] = await db.insert(assignments).values(insertAssignment).returning();
     return assignment;
   }
 
   async getAssignments(): Promise<Assignment[]> {
-    return Array.from(this.assignments.values());
+    return await db.select().from(assignments);
   }
 
   async getAssignmentsByTeacher(teacherId: number): Promise<Assignment[]> {
-    return Array.from(this.assignments.values()).filter(
-      (assignment) => assignment.teacherId === teacherId
-    );
+    return await db.select().from(assignments).where(eq(assignments.teacherId, teacherId));
   }
 
   async createSubmission(insertSubmission: InsertSubmission): Promise<Submission> {
-    const id = this.currentId++;
-    const submission: Submission = {
-      ...insertSubmission,
-      id,
-      aiScore: insertSubmission.aiScore ?? null,
-      plagiarismScore: insertSubmission.plagiarismScore ?? null
-    };
-    this.submissions.set(id, submission);
+    const [submission] = await db.insert(submissions).values(insertSubmission).returning();
     return submission;
   }
 
   async getSubmissionsByAssignment(assignmentId: number): Promise<Submission[]> {
-    return Array.from(this.submissions.values()).filter(
-      (submission) => submission.assignmentId === assignmentId
-    );
+    return await db.select().from(submissions).where(eq(submissions.assignmentId, assignmentId));
   }
 
   async getSubmissionsByStudent(studentId: number): Promise<Submission[]> {
-    return Array.from(this.submissions.values()).filter(
-      (submission) => submission.studentId === studentId
-    );
+    return await db.select().from(submissions).where(eq(submissions.studentId, studentId));
   }
 }
 
-export const storage = new MemStorage();
+export const storage = new DatabaseStorage();
