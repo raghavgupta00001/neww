@@ -42,7 +42,7 @@ export default function LandingPage() {
         <section className="py-20">
           <div className="container mx-auto px-4">
             <h2 className="text-3xl font-bold text-center mb-12">
-              Why Choose EduAssign?
+              Why Choose PlagiCheck?
             </h2>
             <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
               {features.map((feature) => (
@@ -97,7 +97,7 @@ export default function LandingPage() {
       {/* Footer */}
       <footer className="bg-gray-50 py-8">
         <div className="container mx-auto px-4 text-center text-gray-600">
-          <p>© 2024 EduAssign. All rights reserved.</p>
+          <p>© 2024 PlagiCheck. All rights reserved.</p>
         </div>
       </footer>
     </div>

@@ -13,7 +13,7 @@ export function Navbar() {
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center space-x-2">
               <GraduationCap className="h-8 w-8 text-primary" />
-              <span className="text-xl font-bold">EduAssign</span>
+              <span className="text-xl font-bold">PlagiCheck</span>
             </Link>
 
             <div className="hidden md:flex space-x-4 ml-8">
