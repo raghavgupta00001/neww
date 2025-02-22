@@ -14,7 +14,7 @@ export async function checkPlagiarism(text: string): Promise<{
         {
           role: "system",
           content:
-            "Analyze the following text and provide two scores: 1) likelihood it was AI generated (0-100), 2) likelihood it was plagiarized (0-100). Provide scores in JSON format: { 'aiScore': number, 'plagiarismScore': number }",
+            "PlagiCheck Analysis: Analyze the following text and provide two scores: 1) likelihood it was AI generated (0-100), 2) likelihood it was plagiarized (0-100). Provide scores in JSON format: { 'aiScore': number, 'plagiarismScore': number }",
         },
         {
           role: "user",
