@@ -2,11 +2,20 @@ import { useAuth } from "@/hooks/use-auth";
 import { useQuery } from "@tanstack/react-query";
 import { Assignment, Submission } from "@shared/schema";
 import { AssignmentForm } from "@/components/assignment-form";
-import { AssignmentList } from "@/components/assignment-list";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Dialog, DialogContent, DialogTrigger } from "@/components/ui/dialog";
 import { Plus, LogOut } from "lucide-react";
+import { Progress } from "@/components/ui/progress";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { format } from "date-fns";
 
 export default function TeacherDashboard() {
   const { user, logoutMutation } = useAuth();
@@ -63,7 +72,10 @@ export default function TeacherDashboard() {
               <CardTitle className="text-sm font-medium">Average AI Score</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{averageAiScore.toFixed(1)}%</div>
+              <div className="space-y-2">
+                <div className="text-2xl font-bold">{averageAiScore.toFixed(1)}%</div>
+                <Progress value={averageAiScore} className="h-2" />
+              </div>
             </CardContent>
           </Card>
           <Card>
@@ -71,27 +83,95 @@ export default function TeacherDashboard() {
               <CardTitle className="text-sm font-medium">Average Plagiarism</CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{averagePlagiarismScore.toFixed(1)}%</div>
+              <div className="space-y-2">
+                <div className="text-2xl font-bold">{averagePlagiarismScore.toFixed(1)}%</div>
+                <Progress value={averagePlagiarismScore} className="h-2" />
+              </div>
             </CardContent>
           </Card>
         </div>
 
-        <div className="flex justify-between items-center mb-6">
-          <h2 className="text-xl font-semibold">Assignments</h2>
-          <Dialog>
-            <DialogTrigger asChild>
-              <Button>
-                <Plus className="h-4 w-4 mr-2" />
-                Create Assignment
-              </Button>
-            </DialogTrigger>
-            <DialogContent>
-              <AssignmentForm />
-            </DialogContent>
-          </Dialog>
-        </div>
+        <div className="space-y-6">
+          <div className="flex justify-between items-center">
+            <h2 className="text-xl font-semibold">Assignments & Submissions</h2>
+            <Dialog>
+              <DialogTrigger asChild>
+                <Button>
+                  <Plus className="h-4 w-4 mr-2" />
+                  Create Assignment
+                </Button>
+              </DialogTrigger>
+              <DialogContent>
+                <AssignmentForm />
+              </DialogContent>
+            </Dialog>
+          </div>
 
-        <AssignmentList assignments={assignments} showSubmissions />
+          {assignments.map((assignment) => {
+            const submissions = allSubmissions.filter(
+              (s) => s.assignmentId === assignment.id
+            );
+
+            return (
+              <Card key={assignment.id} className="overflow-hidden">
+                <CardHeader>
+                  <CardTitle>{assignment.title}</CardTitle>
+                  <p className="text-sm text-gray-500">
+                    Due: {format(new Date(assignment.dueDate), "PPP")}
+                  </p>
+                </CardHeader>
+                <CardContent>
+                  <div className="rounded-md border">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Student</TableHead>
+                          <TableHead>Submission Date</TableHead>
+                          <TableHead>File</TableHead>
+                          <TableHead>AI Detection</TableHead>
+                          <TableHead>Plagiarism</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {submissions.map((submission) => (
+                          <TableRow key={submission.id}>
+                            <TableCell>{submission.studentId}</TableCell>
+                            <TableCell>
+                              {format(new Date(submission.submitDate), "PP")}
+                            </TableCell>
+                            <TableCell>{submission.fileName}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Progress 
+                                  value={submission.aiScore} 
+                                  className="w-24"
+                                />
+                                <span className="text-sm">
+                                  {submission.aiScore}%
+                                </span>
+                              </div>
+                            </TableCell>
+                            <TableCell>
+                              <div className="flex items-center gap-2">
+                                <Progress 
+                                  value={submission.plagiarismScore} 
+                                  className="w-24"
+                                />
+                                <span className="text-sm">
+                                  {submission.plagiarismScore}%
+                                </span>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                </CardContent>
+              </Card>
+            );
+          })}
+        </div>
       </main>
     </div>
   );

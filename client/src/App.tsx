@@ -9,13 +9,20 @@ import AuthPage from "@/pages/auth-page";
 import TeacherDashboard from "@/pages/teacher-dashboard";
 import StudentDashboard from "@/pages/student-dashboard";
 import LandingPage from "@/pages/landing-page";
-import { useAuth } from "@/hooks/use-auth"; // Import useAuth
+import AIDetectorPage from "@/pages/ai-detector";
+import QRCodePage from "@/pages/qr-code";
+import { useAuth } from "@/hooks/use-auth";
 
 function Router() {
   return (
     <Switch>
       <Route path="/" component={LandingPage} />
       <Route path="/auth" component={AuthPage} />
+      <Route path="/ai-detector" component={AIDetectorPage} />
+      <ProtectedRoute 
+        path="/qr-code" 
+        component={QRCodePage}
+      />
       <ProtectedRoute 
         path="/dashboard" 
         component={() => {

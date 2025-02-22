@@ -95,6 +95,19 @@ export async function registerRoutes(app: Express): Promise<Server> {
     res.json(submissions);
   });
 
+  app.post("/api/analyze", async (req, res) => {
+    if (!req.isAuthenticated()) return res.status(401).send();
+
+    try {
+      const { text } = req.body;
+      const { aiScore, plagiarismScore } = await checkPlagiarism(text);
+      res.json({ aiScore, plagiarismScore });
+    } catch (error) {
+      console.error("Analysis error:", error);
+      res.status(500).json({ message: "Failed to analyze text" });
+    }
+  });
+
   const httpServer = createServer(app);
   return httpServer;
 }
