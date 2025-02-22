@@ -21,6 +21,7 @@ export function FileUpload({ assignmentId, onSuccess }: FileUploadProps) {
         assignmentId,
         fileContent,
         fileName: file?.name || "submission.txt",
+        submitDate: new Date().toISOString(),
       };
       const res = await apiRequest("POST", "/api/submissions", data);
       return res.json();
@@ -66,9 +67,10 @@ export function FileUpload({ assignmentId, onSuccess }: FileUploadProps) {
     const reader = new FileReader();
     reader.onload = async (e) => {
       const content = e.target?.result as string;
-      uploadMutation.mutate(content.split(",")[1] || content);
+      const base64Content = content.includes('base64,') ? content.split('base64,')[1] : btoa(content);
+      uploadMutation.mutate(base64Content);
     };
-    reader.readAsText(file);
+    reader.readAsDataURL(file);
   };
 
   return (
