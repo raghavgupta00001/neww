@@ -9,16 +9,17 @@ import { useMutation } from "@tanstack/react-query";
 import { apiRequest, queryClient } from "@/lib/queryClient";
 import { useToast } from "@/hooks/use-toast";
 import { DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { format } from "date-fns";
 
 export function AssignmentForm() {
   const { toast } = useToast();
-  
+
   const form = useForm({
     resolver: zodResolver(insertAssignmentSchema.omit({ teacherId: true })),
     defaultValues: {
       title: "",
       description: "",
-      dueDate: new Date().toISOString().split('T')[0],
+      dueDate: format(new Date(), "yyyy-MM-dd'T'HH:mm"), // Set default to current date and time
     },
   });
 
@@ -26,7 +27,7 @@ export function AssignmentForm() {
     mutationFn: async (values) => {
       const formData = {
         ...values,
-        dueDate: new Date(values.dueDate + 'T00:00:00')
+        dueDate: new Date(values.dueDate),
       };
       const res = await apiRequest("POST", "/api/assignments", formData);
       return res.json();
@@ -91,7 +92,10 @@ export function AssignmentForm() {
               <FormItem>
                 <FormLabel>Due Date</FormLabel>
                 <FormControl>
-                  <Input type="date" {...field} />
+                  <Input 
+                    type="datetime-local" 
+                    {...field}
+                  />
                 </FormControl>
                 <FormMessage />
               </FormItem>
