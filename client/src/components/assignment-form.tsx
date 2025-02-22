@@ -18,16 +18,15 @@ export function AssignmentForm() {
     defaultValues: {
       title: "",
       description: "",
-      dueDate: new Date().toISOString().split('T')[0],
+      dueDate: new Date().toISOString(),
     },
   });
 
   const createAssignment = useMutation({
-    mutationFn: async (data: any) => {
-      // Convert date string to ISO timestamp
+    mutationFn: async (values) => {
       const formData = {
-        ...data,
-        dueDate: new Date(data.dueDate).toISOString()
+        ...values,
+        dueDate: new Date(values.dueDate)
       };
       const res = await apiRequest("POST", "/api/assignments", formData);
       return res.json();
