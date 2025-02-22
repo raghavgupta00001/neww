@@ -18,7 +18,7 @@ export function AssignmentForm() {
     defaultValues: {
       title: "",
       description: "",
-      dueDate: new Date().toISOString(),
+      dueDate: new Date().toISOString().split('T')[0],
     },
   });
 
@@ -26,7 +26,7 @@ export function AssignmentForm() {
     mutationFn: async (values) => {
       const formData = {
         ...values,
-        dueDate: new Date(values.dueDate)
+        dueDate: new Date(values.dueDate + 'T00:00:00')
       };
       const res = await apiRequest("POST", "/api/assignments", formData);
       return res.json();
