@@ -42,21 +42,39 @@ export async function registerRoutes(app: Express): Promise<Server> {
   app.post("/api/submissions", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).send();
 
-    const parsed = insertSubmissionSchema.safeParse(req.body);
-    if (!parsed.success) return res.status(400).json(parsed.error);
+    try {
+      console.log("Submission request body:", {
+        ...req.body,
+        fileContent: req.body.fileContent ? 'present' : 'missing'
+      });
 
-    // Check for plagiarism
-    const { aiScore, plagiarismScore } = await checkPlagiarism(parsed.data.fileContent);
+      const submissionData = {
+        ...req.body,
+        studentId: req.user.id,
+        submitDate: new Date(),
+      };
 
-    const submission = await storage.createSubmission({
-      ...parsed.data,
-      studentId: req.user.id,
-      submitDate: new Date(),
-      aiScore,
-      plagiarismScore,
-    });
+      const parsed = insertSubmissionSchema.safeParse(submissionData);
 
-    res.status(201).json(submission);
+      if (!parsed.success) {
+        console.log("Validation error:", parsed.error);
+        return res.status(400).json(parsed.error);
+      }
+
+      // Check for plagiarism
+      const { aiScore, plagiarismScore } = await checkPlagiarism(parsed.data.fileContent);
+
+      const submission = await storage.createSubmission({
+        ...parsed.data,
+        aiScore,
+        plagiarismScore,
+      });
+
+      res.status(201).json(submission);
+    } catch (error) {
+      console.error("Submission error:", error);
+      res.status(500).json({ message: "Failed to process submission" });
+    }
   });
 
   app.get("/api/submissions/assignment/:id", async (req, res) => {
