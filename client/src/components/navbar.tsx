@@ -12,8 +12,7 @@ export function Navbar() {
         <div className="flex h-16 items-center justify-between">
           <div className="flex items-center space-x-4">
             <Link href="/" className="flex items-center">
-              <img src="/logo.png" alt="EduAssign" className="h-8" />
-              <span className="ml-2 text-xl font-bold">EduAssign</span>
+              <span className="text-xl font-bold text-primary">PlagiCheck</span>
             </Link>
 
             <div className="hidden md:flex space-x-4 ml-8">

@@ -23,7 +23,7 @@ export default function LandingPage() {
           <div className="container mx-auto px-4">
             <div className="max-w-3xl mx-auto text-center">
               <h1 className="text-4xl md:text-5xl font-bold mb-6 bg-gradient-to-r from-primary to-blue-600 bg-clip-text text-transparent">
-                Welcome to EduAssign
+                Welcome to PlagiCheck
               </h1>
               <p className="text-xl text-gray-600 mb-8">
                 Streamline assignment management with powerful AI-assisted tools for plagiarism detection
