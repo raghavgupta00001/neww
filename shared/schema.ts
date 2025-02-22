@@ -28,8 +28,11 @@ export const submissions = pgTable("submissions", {
   plagiarismScore: integer("plagiarism_score"),
 });
 
+// Modified schema to properly handle date
+export const insertAssignmentSchema = createInsertSchema(assignments, {
+  dueDate: z.string().transform((str) => new Date(str)),
+});
 export const insertUserSchema = createInsertSchema(users);
-export const insertAssignmentSchema = createInsertSchema(assignments);
 export const insertSubmissionSchema = createInsertSchema(submissions);
 
 export type User = typeof users.$inferSelect;

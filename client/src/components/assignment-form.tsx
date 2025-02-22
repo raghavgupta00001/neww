@@ -19,17 +19,13 @@ export function AssignmentForm() {
     defaultValues: {
       title: "",
       description: "",
-      dueDate: format(new Date(), "yyyy-MM-dd'T'HH:mm"), // Set default to current date and time
+      dueDate: format(new Date(), "yyyy-MM-dd'T'HH:mm"),
     },
   });
 
   const createAssignment = useMutation({
-    mutationFn: async (values) => {
-      const formData = {
-        ...values,
-        dueDate: new Date(values.dueDate),
-      };
-      const res = await apiRequest("POST", "/api/assignments", formData);
+    mutationFn: async (values: { title: string; description: string; dueDate: string }) => {
+      const res = await apiRequest("POST", "/api/assignments", values);
       return res.json();
     },
     onSuccess: () => {
@@ -93,7 +89,7 @@ export function AssignmentForm() {
                 <FormLabel>Due Date</FormLabel>
                 <FormControl>
                   <Input 
-                    type="datetime-local" 
+                    type="datetime-local"
                     {...field}
                   />
                 </FormControl>
