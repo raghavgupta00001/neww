@@ -14,23 +14,27 @@ export async function registerRoutes(app: Express): Promise<Server> {
       return res.status(403).send("Only teachers can create assignments");
     }
 
-    const parsed = insertAssignmentSchema.safeParse(req.body);
-    if (!parsed.success) return res.status(400).json(parsed.error);
-
-    const assignment = await storage.createAssignment({
-      ...parsed.data,
-      teacherId: req.user.id,
+    const parsed = insertAssignmentSchema.safeParse({
+      ...req.body,
+      teacherId: req.user.id
     });
+
+    if (!parsed.success) {
+      console.log("Validation error:", parsed.error);
+      return res.status(400).json(parsed.error);
+    }
+
+    const assignment = await storage.createAssignment(parsed.data);
     res.status(201).json(assignment);
   });
 
   app.get("/api/assignments", async (req, res) => {
     if (!req.isAuthenticated()) return res.status(401).send();
-    
+
     const assignments = req.user.isTeacher 
       ? await storage.getAssignmentsByTeacher(req.user.id)
       : await storage.getAssignments();
-    
+
     res.json(assignments);
   });
 
